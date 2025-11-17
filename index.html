@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .log {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .debit { color: red; font-weight: bold; }
+        .credit { color: green; font-weight: bold; }
+
+        .summary {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Expense Calculator</h2>
+
+        <div class="input-group">
+            <input type="text" id="desc" placeholder="Description">
+            <input type="number" id="amount" placeholder="Amount">
+            <select id="type">
+                <option value="credit">Credit</option>
+                <option value="debit">Debit</option>
+            </select>
+            <button onclick="addEntry()">Add</button>
+        </div>
+
+        <div class="summary">
+            Total Credit: ₹<span id="totalCredit">0</span> |
+            Total Debit: ₹<span id="totalDebit">0</span>
+        </div>
+
+        <div class="log">
+            <h3>Expense Log</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="logTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let totalCredit = 0;
+        let totalDebit = 0;
+
+        function addEntry() {
+            const desc = document.getElementById("desc").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            const type = document.getElementById("type").value;
+
+            if (desc === "" || isNaN(amount)) {
+                alert("Please enter valid description and amount!");
+                return;
+            }
+
+            const date = new Date().toLocaleDateString();
+
+            // Update totals
+            if (type === "credit") {
+                totalCredit += amount;
+                document.getElementById("totalCredit").innerText = totalCredit;
+            } else {
+                totalDebit += amount;
+                document.getElementById("totalDebit").innerText = totalDebit;
+            }
+
+            // Add row to table
+            const table = document.getElementById("logTable");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${date}</td>
+                <td>${desc}</td>
+                <td class="${type}">${type.toUpperCase()}</td>
+                <td>${amount}</td>
+            `;
+
+            table.appendChild(row);
+
+            // Clear inputs
+            document.getElementById("desc").value = "";
+            document.getElementById("amount").value = "";
+        }
+    </script>
+</body>
+</html>
